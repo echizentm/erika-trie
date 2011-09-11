@@ -26,16 +26,16 @@ void write_nodes(vector<string> &dic) {
   while (q.size() > 0) {
     range r = q.front();
     q.pop();
-    uc     pre_l  = dic[r.b][r.d];
     ullong pre_b  = r.b;
     if (dic[pre_b].length() < r.d) {
       cout << "0\t0" << endl;
       pre_b++;
       if (pre_b == r.e) { continue; }
     }
+    uc     pre_l  = dic[pre_b][r.d];
     ullong degree = 0;
     for (ullong i = pre_b; i < r.e; i++) {
-      if (dic[i][r.d] != pre_l) {
+      if (uc(dic[i][r.d]) != pre_l) {
         q.push(range(pre_b, i, r.d + 1));
         degree++;
         pre_b = i;
