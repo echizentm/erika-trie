@@ -5,7 +5,7 @@ using namespace erika;
 
 int main(int argc, char **argv) {
   if (argc < 2) {
-    cerr << "USAGE: erika_make_trie <outfile> < infile";
+    cerr << "USAGE: erika_make_trie <trie_name> < infile" << endl;
     return 0;
   }
 
