@@ -6,8 +6,9 @@ SRC = erika_vcode.cc erika_trie.cc
 HDR = erika_vcode.h erika_trie.h
 UNAME = $(shell uname)
 
-erika: liberika erika_make_node.cc
+erika: liberika $(SRC) erika_make_node.cc erika_make_trie.cc
 	$(CC) -O2 -Wall -g erika_make_node.cc -o erika_make_node
+	$(CC) -O2 -Wall -g erika_make_trie.cc $(SRC) -o erika_make_trie
 
 liberika: $(SRC) $(HDR) clean
 ifeq ($(UNAME), Darwin)
@@ -26,8 +27,10 @@ endif
 
 clean:
 	- rm -f erika_make_node
+	- rm -f erika_make_trie
 	- rm -f liberika.so.1.0
 	- rm -f liberika.1.0.dylib
+	- rm -Rf *.dSYM
 
 install:
 ifeq ($(UNAME), Linux)
@@ -48,6 +51,7 @@ endif
 endif
 	cp erika_*.h $(INC)
 	cp erika_make_node $(BIN)
+	cp erika_make_trie $(BIN)
 
 uninstall:
 	- rm -f $(LIB)liberika.so
@@ -58,4 +62,5 @@ uninstall:
 	- rm -f $(LIB)liberika.1.0.dylib
 	- rm -f $(INC)erika_*.h
 	- rm -f $(BIN)erika_make_node
+	- rm -f $(BIN)erika_make_trie
 
