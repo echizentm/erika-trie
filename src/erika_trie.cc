@@ -49,11 +49,11 @@ namespace erika {
       begin = this->child(pos);
       end   = begin + this->degree(pos);
       if (is_cps || key[depth] == '\0') {
-        //ullong v = this->bsearch('\0', begin, end);
-        //if(v != this->size()) { values.push_back(value(depth_begin, depth, v)); }
-        if((end > begin) || this->label(begin) == '\0') {
-          values.push_back(value(depth_begin, depth, begin));
-        }
+        ullong v = this->bsearch('\0', begin, end);
+        if(v != this->size()) { values.push_back(value(depth_begin, depth, v)); }
+        //if((end > begin) && this->label(begin) == '\0') {
+        //  values.push_back(value(depth_begin, depth, begin));
+        //}
       }
     }
   }
