@@ -1,0 +1,33 @@
+erika-trie: succinct trie library
+written by echizen_tm (MAEZAWA Toshiyuki)
+
+* this library is available for unix, linux, & mac(darwin)
+
+
+# install
+$$ cd src/
+$$ make
+$$ sudo make install
+
+
+# make trie
+$$ cat keys.txt                            # words is asuumed as ascii or utf8
+apple
+add
+all
+
+$$ sort keys.txt -o keys.txt               # sort by character code
+$$ erika_make_node < keys.txt > keys.node  # make node list by level-order
+$$ erika_make_trie keys.trie < keys.node   # make louds trie
+
+
+# extract words from text
+$$ cat sample.txt
+After all, I love applepie.
+ 
+$$ erika_extract keys.trie < sample.txt
+# After all, I love applepie.
+all	6	9
+apple	18	23
+
+
