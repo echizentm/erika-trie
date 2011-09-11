@@ -6,6 +6,9 @@ SRC = erika_vcode.cc erika_trie.cc
 HDR = erika_vcode.h erika_trie.h
 UNAME = $(shell uname)
 
+erika: liberika erika_make_node.cc
+	$(CC) -O2 -Wall -g erika_make_node.cc -o erika_make_node
+
 liberika: $(SRC) $(HDR) clean
 ifeq ($(UNAME), Darwin)
 	$(CC) -O2 -fno-common -Wall -fPIC -g -c erika_vcode.cc
@@ -22,6 +25,7 @@ endif
 	rm erika_trie.o
 
 clean:
+	- rm -f erika_make_node
 	- rm -f liberika.so.1.0
 	- rm -f liberika.1.0.dylib
 
@@ -43,6 +47,7 @@ else
 endif
 endif
 	cp erika_*.h $(INC)
+	cp erika_make_node $(BIN)
 
 uninstall:
 	- rm -f $(LIB)liberika.so
@@ -52,4 +57,5 @@ uninstall:
 	- rm -f $(LIB)liberika.1.dylib
 	- rm -f $(LIB)liberika.1.0.dylib
 	- rm -f $(INC)erika_*.h
+	- rm -f $(BIN)erika_make_node
 
