@@ -15,8 +15,14 @@ struct range {
 
 void read_words(vector<string> &dic) {
   string s;
-  while (cin >> s) {
-    dic.push_back(s);
+  char   ch;
+  while ((ch = getc(stdin)) != -1) {
+    if (ch != '\n') {
+      s += ch;
+    } else {
+      dic.push_back(s);
+      s = "";
+    }
   }
 }
 
