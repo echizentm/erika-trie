@@ -6,7 +6,7 @@ using namespace erika;
 
 int main(int argc, char **argv) {
   if (argc < 2) {
-    cerr << "USAGE: erika_make_trie <trie_name> < infile" << endl;
+    cerr << "USAGE: erika_extract <trie_name> < infile" << endl;
     return 0;
   }
 
@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
       } else {
         cout << "# " << s << endl;
         vector<value> v;
-        t.cpsearch_all(s.c_str(), v);
+        t.extract(s.c_str(), v);
         vector<value>::const_iterator i = v.begin();
         vector<value>::const_iterator e = v.end();
         while (i != e) {

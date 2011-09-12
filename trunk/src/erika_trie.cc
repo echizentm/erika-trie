@@ -49,24 +49,22 @@ namespace erika {
       begin = this->child(pos);
       end   = begin + this->degree(pos);
       if (is_cps || key[depth] == '\0') {
-        //ullong v = this->bsearch('\0', begin, end);
-        //if(v != this->size()) { values.push_back(value(depth_begin, depth, v)); }
         if((end > begin) && this->label(begin) == '\0') {
           values.push_back(value(depth_begin, depth, begin));
         }
       }
     }
   }
-  ullong trie::search(const char *key) {
+  ullong trie::lookup(const char *key) {
     vector<value> values;
     this->csearch(key, values, false, 0);
     if (values.size() == 0) { return 0; }
     return values[0].pos();
   }
-  void trie::cpsearch(const char *key, vector<value> &values) {
+  void trie::common_prefix_search(const char *key, vector<value> &values) {
     this->csearch(key, values, true, 0);
   }
-  void trie::cpsearch_all(const char *key, vector<value> &values) {
+  void trie::extract(const char *key, vector<value> &values) {
     ullong depth = 0;
     while (key[depth] != '\0') {
       this->csearch(key, values, true, depth);

@@ -10,12 +10,12 @@ int main(int argc, char **argv) {
   }
 
   try {
-    trie t;
-    uint   label;
+    trie   t;
+    int    label;
     ullong degree;
     while (cin >> label) {
       if (cin >> degree) {
-        t.push(label, degree);
+        t.push(uc(label), degree);
       }
     }
     t.write(argv[1]);

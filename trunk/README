@@ -1,7 +1,17 @@
 erika-trie: succinct trie library
 written by echizen_tm (MAEZAWA Toshiyuki)
 
-* this library is available for unix, linux, & mac(darwin)
+# description
+erika: ExtRact Information as Keyword Array
+erika-trie is trie library which uses succinct tree
+(Level-Order Unary Degree Sequence).
+
+# OS
+this library is available for unix, linux, & mac(darwin)
+
+# license
+New BSD License
+
 
 
 # install

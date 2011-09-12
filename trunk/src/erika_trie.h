@@ -36,9 +36,9 @@ namespace erika {
     trie(const char *filename);
     ~trie();
 
-    ullong search(const char *key);
-    void   cpsearch(const char *key, std::vector<value> &values);
-    void   cpsearch_all(const char *key, std::vector<value> &values);
+    ullong lookup(const char *key);
+    void   common_prefix_search(const char *key, std::vector<value> &values);
+    void   extract(const char *key, std::vector<value> &values);
     bool   read(std::ifstream &ifs);
     bool   read(const char *filename);
     void   write(std::ofstream &ofs) const;
