@@ -36,7 +36,7 @@ namespace erika {
     return this->size();
   }
   void trie::csearch(const char *key, vector<value> &values,
-                     bool is_cps, ullong depth) {
+                     bool is_cps, ullong depth, ullong max) {
     ullong depth_begin = depth;
     ullong pos   = 0;
     ullong begin = this->child(pos);
@@ -51,25 +51,36 @@ namespace erika {
       if (is_cps || key[depth] == '\0') {
         if((end > begin) && this->label(begin) == '\0') {
           values.push_back(value(depth_begin, depth, begin));
+          if (values.size() == max) { return; }
         }
       }
     }
   }
   ullong trie::lookup(const char *key) {
     vector<value> values;
-    this->csearch(key, values, false, 0);
+    this->csearch(key, values, false, 0, 0);
     if (values.size() == 0) { return 0; }
     return values[0].pos();
   }
   void trie::common_prefix_search(const char *key, vector<value> &values) {
-    this->csearch(key, values, true, 0);
+    this->csearch(key, values, true, 0, 0);
   }
   void trie::extract(const char *key, vector<value> &values) {
     ullong depth = 0;
     while (key[depth] != '\0') {
-      this->csearch(key, values, true, depth);
+      this->csearch(key, values, true, depth, 0);
       depth++;
     }
+  }
+  bool trie::check(const char *key) {
+    vector<value> values;
+    ullong depth = 0;
+    while (key[depth] != '\0') {
+      this->csearch(key, values, true, depth, 1);
+      if (values.size() > 0) { return true; }
+      depth++;
+    }
+    return false;
   }
 
   bool trie::read(ifstream &ifs) {

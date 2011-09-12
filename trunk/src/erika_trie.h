@@ -28,7 +28,7 @@ namespace erika {
     void initialize();
     ullong bsearch(uc label, ullong l, ullong r) const;
     void csearch(const char *key, std::vector<value> &values,
-                 bool is_cps, ullong depth);
+                 bool is_cps, ullong depth, ullong max);
 
   public:
     trie();
@@ -39,6 +39,7 @@ namespace erika {
     ullong lookup(const char *key);
     void   common_prefix_search(const char *key, std::vector<value> &values);
     void   extract(const char *key, std::vector<value> &values);
+    bool   check(const char *key);
     bool   read(std::ifstream &ifs);
     bool   read(const char *filename);
     void   write(std::ofstream &ofs) const;
