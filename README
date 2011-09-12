@@ -41,3 +41,17 @@ all	6	9
 apple	18	23
 
 
+# predict words from text
+$$ cat sample2.txt
+a
+app
+ 
+$$ erika_extract keys.trie < sample2.txt
+# a
+add
+all
+apple
+# app
+apple
+
+
