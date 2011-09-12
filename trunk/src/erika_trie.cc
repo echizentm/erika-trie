@@ -56,6 +56,19 @@ namespace erika {
       }
     }
   }
+  void trie::dsearch(ullong pos, const string &str,
+                     vector<pair<string, ullong> > &values) {
+    ullong begin = this->child(pos);
+    ullong end   = begin + this->degree(pos);
+    if (this->label(begin) == '\0') {
+      values.push_back(pair<string, ullong>(str, begin));
+      begin++;
+    }
+    while (begin < end) {
+      this->dsearch(begin, str + char(this->label(begin)), values);
+      begin++;
+    }
+  }
   ullong trie::lookup(const char *key) {
     vector<value> values;
     this->csearch(key, values, false, 0, 0);
@@ -64,6 +77,19 @@ namespace erika {
   }
   void trie::common_prefix_search(const char *key, vector<value> &values) {
     this->csearch(key, values, true, 0, 0);
+  }
+  void trie::predictive_search(const char *key,
+                               vector<pair<string, ullong> > &values) {
+    ullong depth = 0;
+    ullong pos   = 0;
+    while (key[depth] != '\0') {
+      ullong begin = this->child(pos);
+      ullong end   = begin + this->degree(pos);
+      pos  = this->bsearch(uc(key[depth]), begin, end);
+      if (pos == this->size()) { return; }
+      depth++;
+    }
+    this->dsearch(pos, key, values);
   }
   void trie::extract(const char *key, vector<value> &values) {
     ullong depth = 0;

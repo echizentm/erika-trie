@@ -2,6 +2,7 @@
 #define ERIKA_TRIE
 #include "erika_vcode.h"
 #include <map>
+#include <string>
 
 namespace erika {
   typedef unsigned char uc;
@@ -29,6 +30,8 @@ namespace erika {
     ullong bsearch(uc label, ullong l, ullong r) const;
     void csearch(const char *key, std::vector<value> &values,
                  bool is_cps, ullong depth, ullong max);
+    void dsearch(ullong pos, const std::string &str,
+                 std::vector<std::pair<std::string, ullong> > &values);
 
   public:
     trie();
@@ -38,6 +41,8 @@ namespace erika {
 
     ullong lookup(const char *key);
     void   common_prefix_search(const char *key, std::vector<value> &values);
+    void   predictive_search(const char *key,
+               std::vector<std::pair<std::string, ullong> > &values);
     void   extract(const char *key, std::vector<value> &values);
     bool   check(const char *key);
     bool   read(std::ifstream &ifs);
