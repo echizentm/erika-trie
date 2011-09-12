@@ -46,7 +46,7 @@ $$ cat sample2.txt
 a
 app
  
-$$ erika_extract keys.trie < sample2.txt
+$$ erika_predictive_search keys.trie < sample2.txt
 # a
 add
 all
