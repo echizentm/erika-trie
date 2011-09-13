@@ -21,14 +21,12 @@ $$ sudo make install
 
 
 # make trie
-$$ cat keys.txt                            # words is asuumed as ascii or utf8
+$$ cat keys.txt  # words is asuumed as ascii or utf8
 apple
 add
 all
 
-$$ sort keys.txt -o keys.txt               # sort by character code
-$$ erika_make_node < keys.txt > keys.node  # make node list by level-order
-$$ erika_make_trie keys.trie < keys.node   # make louds trie
+$$ erika_make.sh keys.txt keys.trie
 
 
 # extract words from text

@@ -58,6 +58,7 @@ endif
 	cp erika_*.h               $(INC)
 	cp erika_make_node         $(BIN)
 	cp erika_make_trie         $(BIN)
+	cp erika_make.sh           $(BIN)
 	cp erika_extract           $(BIN)
 	cp erika_predictive_search $(BIN)
 
@@ -71,6 +72,7 @@ uninstall:
 	- rm -f $(INC)erika_*.h
 	- rm -f $(BIN)erika_make_node
 	- rm -f $(BIN)erika_make_trie
+	- rm -f $(BIN)erika_make.sh
 	- rm -f $(BIN)erika_extract
 	- rm -f $(BIN)erika_predictive_search
 
