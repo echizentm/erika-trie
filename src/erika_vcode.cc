@@ -3,22 +3,6 @@
 namespace erika {
   using namespace std;
 
-  ullong popcount64(ullong x) {
-    x = ((x & 0xaaaaaaaaaaaaaaaaULL) >> 1) 
-      +  (x & 0x5555555555555555ULL); 
-    x = ((x & 0xccccccccccccccccULL) >> 2) 
-      +  (x & 0x3333333333333333ULL); 
-    x = ((x & 0xf0f0f0f0f0f0f0f0ULL) >> 4) 
-      +  (x & 0x0f0f0f0f0f0f0f0fULL); 
-    x = ((x & 0xff00ff00ff00ff00ULL) >> 8) 
-      +  (x & 0x00ff00ff00ff00ffULL); 
-    x = ((x & 0xffff0000ffff0000ULL) >> 16) 
-      +  (x & 0x0000ffff0000ffffULL); 
-    x = ((x & 0xffffffff00000000ULL) >> 32) 
-      +  (x & 0x00000000ffffffffULL); 
-    return x; 
-  }
-
   void vcode::initialize() {
     this->cMSB_.push_back(0);
     this->base_.push_back(0);
