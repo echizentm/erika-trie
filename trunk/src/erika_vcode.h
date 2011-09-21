@@ -1,12 +1,10 @@
 #ifndef ERIKA_VCODE
 #define ERIKA_VCODE
+#include "erika_defs.h"
 #include <fstream>
 #include <vector>
 
 namespace erika {
-  typedef unsigned long long ullong;
-  typedef unsigned int       uint;
-
   class vcode {
     std::vector<uint>   cMSB_;
     std::vector<ullong> base_;

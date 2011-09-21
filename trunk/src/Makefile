@@ -2,8 +2,8 @@ CC  = /usr/bin/g++
 BIN = /usr/local/bin/
 LIB = /usr/local/lib/
 INC = /usr/local/include/
-SRC = erika_vcode.cc erika_trie.cc
-HDR = erika_vcode.h erika_trie.h
+SRC = erika_bv.cc erika_vcode.cc erika_trie.cc
+HDR = erika_defs.h erika_bv.h erika_vcode.h erika_trie.h
 UNAME = $(shell uname)
 
 erika: liberika $(SRC) erika_make_node.cc erika_make_trie.cc \
@@ -19,16 +19,19 @@ erika: liberika $(SRC) erika_make_node.cc erika_make_trie.cc \
 
 liberika: $(SRC) $(HDR)
 ifeq ($(UNAME), Darwin)
+	$(CC) -O2 -fno-common -Wall -fPIC -g -c erika_bv.cc
 	$(CC) -O2 -fno-common -Wall -fPIC -g -c erika_vcode.cc
 	$(CC) -O2 -fno-common -Wall -fPIC -g -c erika_trie.cc
 	$(CC) -O2 -Wall -g -dynamiclib -install_name=$(LIB)liberika.1.0.dylib \
-          -o liberika.1.0.dylib erika_vcode.o erika_trie.o
+          -o liberika.1.0.dylib erika_bv.o erika_vcode.o erika_trie.o
 else
+	$(CC) -O2 -Wall -fPIC -g -c erika_bv.cc
 	$(CC) -O2 -Wall -fPIC -g -c erika_vcode.cc
 	$(CC) -O2 -Wall -fPIC -g -c erika_trie.cc
 	$(CC) -O2 -Wall -g -shared -Wl,-soname,liberika.so.1 \
-          -o liberika.so.1.0 erika_vcode.o erika_trie.o
+          -o liberika.so.1.0 erika_bv.o erika_vcode.o erika_trie.o
 endif
+	rm erika_bv.o
 	rm erika_vcode.o
 	rm erika_trie.o
 

@@ -13,9 +13,10 @@ int main(int argc, char **argv) {
     trie   t;
     int    label;
     ullong degree;
+    int    tail;
     while (cin >> label) {
-      if (cin >> degree) {
-        t.push(uc(label), degree);
+      if (cin >> degree && cin >> tail) {
+        t.push(uc(label), degree, ((tail > 0) ? true : false));
       }
     }
     t.write(argv[1]);

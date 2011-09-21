@@ -1,12 +1,11 @@
 #ifndef ERIKA_TRIE
 #define ERIKA_TRIE
+#include "erika_bv.h"
 #include "erika_vcode.h"
 #include <map>
 #include <string>
 
 namespace erika {
-  typedef unsigned char uc;
-
   class value {
     ullong begin_; // beginning position of key
     ullong end_;   // ending position of key
@@ -22,6 +21,7 @@ namespace erika {
 
   class trie {
     vcode           vc_;
+    bv              tail_;
     std::vector<uc> ls_;
 
     trie(const trie &);
@@ -51,14 +51,16 @@ namespace erika {
     void   write(const char *filename, bool is_append = false) const;
 
     ullong size() const { return this->ls_.size(); }
-    void push(uc label, ullong degree) {
+    void push(uc label, ullong degree, bool is_tail) {
       this->vc_.push(degree);
       this->ls_.push_back(label);
+      this->tail_.set(this->size() - 1, is_tail);
     }
-    ullong child(ullong pos)  const { return this->vc_.select(pos); }
-    ullong parent(ullong pos) const { return ullong(this->vc_.rank(pos + 1) - 1); }
-    ullong degree(ullong pos) const { return this->vc_.diff(pos + 1); }
-    uc     label(ullong pos)  const { return this->ls_[pos]; }
+    ullong child(ullong pos)   const { return this->vc_.select(pos); }
+    ullong parent(ullong pos)  const { return ullong(this->vc_.rank(pos + 1) - 1); }
+    ullong degree(ullong pos)  const { return this->vc_.diff(pos + 1); }
+    uc     label(ullong pos)   const { return this->ls_[pos]; }
+    bool   is_tail(ullong pos) const { return this->tail_.get(pos); }
   };
 }
 

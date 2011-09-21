@@ -32,25 +32,29 @@ void write_nodes(vector<string> &dic) {
   while (q.size() > 0) {
     range r = q.front();
     q.pop();
-    ullong pre_b  = r.b;
-    if (dic[pre_b].length() < r.d) {
-      cout << "0\t0" << endl;
+    bool   is_tail = false;
+    ullong pre_b   = r.b;
+    if (dic[pre_b].length() == r.d) {
+      is_tail = true;
       pre_b++;
-      if (pre_b == r.e) { continue; }
     }
-    uc     pre_l  = dic[pre_b][r.d];
     ullong degree = 0;
-    for (ullong i = pre_b; i < r.e; i++) {
-      if (uc(dic[i][r.d]) != pre_l) {
-        q.push(range(pre_b, i, r.d + 1));
-        degree++;
-        pre_b = i;
+    if (pre_b < r.e){
+      uc pre_l = dic[pre_b][r.d];
+      for (ullong i = pre_b; i < r.e; i++) {
+        if (uc(dic[i][r.d]) != pre_l) {
+          q.push(range(pre_b, i, r.d + 1));
+          degree++;
+          pre_b = i;
+        }
+        pre_l = dic[i][r.d];
       }
-      pre_l = dic[i][r.d];
+      q.push(range(pre_b, r.e, r.d + 1));
+      degree++;
     }
-    q.push(range(pre_b, r.e, r.d + 1));
     uc label = (r.d > 0) ? dic[r.b][r.d - 1] : 0;
-    cout << int(label) << "\t" << (degree + 1) << endl;
+    cout << int(label) << "\t" << degree
+         << "\t" << (is_tail ? 1 : 0) << endl;
   }
 }
 
