@@ -39,27 +39,29 @@ namespace erika {
                      bool is_cps, ullong depth, ullong max) {
     ullong depth_begin = depth;
     ullong pos   = 0;
-    ullong begin = this->child(pos);
-    ullong end   = begin + this->degree(pos);
     while (key[depth] != '\0') {
+      ullong begin = this->child(pos);
+      ullong end   = begin + this->degree(pos);
       pos  = this->bsearch(uc(key[depth]), begin, end);
       if (pos == this->size()) { return; }
       depth++;
 
-      if (is_cps || key[depth] == '\0') {
-        if(this->is_tail(pos)) {
-          values.push_back(value(depth_begin, depth, pos));
+      if(this->is_tail(pos)) {
+        const string &tail = this->tail(pos);
+        int r = cmp_substr(tail.c_str(), key + depth);
+        if (r == 0 || (r == 1 && is_cps)) {
+          values.push_back(value(depth_begin,
+                                 depth + tail.length() - 1, pos));
           if (values.size() == max) { return; }
         }
       }
-      begin = this->child(pos);
-      end   = begin + this->degree(pos);
     }
   }
   void trie::dsearch(ullong pos, const string &str,
                      vector<pair<string, ullong> > &values) {
     if (this->is_tail(pos)) {
-      values.push_back(pair<string, ullong>(str, pos));
+      const string &tail = this->tail(pos);
+      values.push_back(pair<string, ullong>(str + tail, pos));
     }
     ullong begin = this->child(pos);
     ullong end   = begin + this->degree(pos);
@@ -87,8 +89,14 @@ namespace erika {
       pos  = this->bsearch(uc(key[depth]), begin, end);
       if (pos == this->size()) { return; }
       depth++;
+
+      if (this->is_tail(pos)) {
+        const string &tail = this->tail(pos);
+        int r = cmp_substr(key + depth, tail.c_str());
+        if (r == 0 || r == 1) { break; }
+      }
     }
-    this->dsearch(pos, key, values);
+    this->dsearch(pos, string(key, 0, depth), values);
   }
   void trie::extract(const char *key, vector<value> &values) {
     ullong depth = 0;
@@ -111,9 +119,9 @@ namespace erika {
   bool trie::read(ifstream &ifs) {
     bool r = this->vc_.read(ifs);
     if (!r) { return false; }
-    r = this->tail_.read(ifs);
+    r = this->is_tail_.read(ifs);
     if (!r) { return false; }
-    this->tail_.build();
+    this->is_tail_.build();
 
     ullong size = 0;
     ifs.read((char *)&size, sizeof(ullong));
@@ -123,6 +131,21 @@ namespace erika {
       ifs.read((char *)&c, sizeof(uc));
       if (ifs.eof()) { return false; }
       this->ls_.push_back(c);
+    }
+
+    ullong t_size = 0;
+    ifs.read((char *)&t_size, sizeof(ullong));
+    this->tail_.clear();
+    for (ullong i = 0; i < t_size; i++) {
+      char   ch;
+      string ss = "";
+      while (1) {
+        ifs.read((char *)&ch, sizeof(char));
+        if (ifs.eof()) { return false; }
+        if (ch == '\0') { break; }
+        ss += ch;
+      }
+      this->tail_.push_back(ss);
     }
     return true;
   }
@@ -137,11 +160,23 @@ namespace erika {
 
   void trie::write(ofstream &ofs) const {
     this->vc_.write(ofs);
-    this->tail_.write(ofs);
+    this->is_tail_.write(ofs);
     ullong size = this->size();
     ofs.write((char *)&size, sizeof(ullong));
     for (ullong i = 0; i < size; i++) {
       ofs.write((char *)&(this->ls_[i]), sizeof(uc));
+    }
+    ullong t_size = this->tail_.size();
+    ofs.write((char *)&t_size, sizeof(ullong));
+    for (ullong i = 0; i < t_size; i++) {
+      char   ch  = '\0';
+      ullong len = this->tail_[i].size();
+      for (ullong j = 0; j < len; j++) {
+        ch = this->tail_[i][j];
+        ofs.write((char *)&ch, sizeof(char));
+      }
+      ch = '\0';
+      ofs.write((char *)&ch, sizeof(char));
     }
   }
   void trie::write(const char *filename, bool is_append) const {
