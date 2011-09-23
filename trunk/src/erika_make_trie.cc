@@ -13,10 +13,19 @@ int main(int argc, char **argv) {
     trie   t;
     int    label;
     ullong degree;
-    int    tail;
+    int    is_tail;
     while (cin >> label) {
-      if (cin >> degree && cin >> tail) {
-        t.push(uc(label), degree, ((tail > 0) ? true : false));
+      if (cin >> degree && cin >> is_tail) {
+        string tail = "";
+        if (is_tail) {
+          int tail_label;
+          while (1) {
+            cin >> tail_label;
+            if (tail_label == 0) { break; }
+            tail += uc(tail_label);
+          }
+        }
+        t.push(uc(label), degree, (is_tail == 1), tail.c_str());
       }
     }
     t.write(argv[1]);

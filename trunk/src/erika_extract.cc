@@ -13,22 +13,16 @@ int main(int argc, char **argv) {
   try {
     trie   t(argv[1]);
     string s;
-    char   ch;
-    while ((ch = getc(stdin)) != -1) {
-      if (ch != '\n') {
-        s += ch;
-      } else {
-        cout << "# " << s << endl;
-        vector<value> v;
-        t.extract(s.c_str(), v);
-        vector<value>::const_iterator i = v.begin();
-        vector<value>::const_iterator e = v.end();
-        while (i != e) {
-          cout << s.substr(i->begin(), i->end() - i->begin())
-               << "\t" << i->begin() << "\t" << i->end() << endl;
-          i++;
-        }
-        s = "";
+    while (getline(cin, s)) {
+      cout << "# " << s << endl;
+      vector<value> v;
+      t.extract(s.c_str(), v);
+      vector<value>::const_iterator i = v.begin();
+      vector<value>::const_iterator e = v.end();
+      while (i != e) {
+        cout << s.substr(i->begin(), i->end() - i->begin())
+             << "\t" << i->begin() << "\t" << i->end() << endl;
+        i++;
       }
     }
   } catch (const char *err) {

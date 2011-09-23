@@ -13,21 +13,15 @@ int main(int argc, char **argv) {
   try {
     trie   t(argv[1]);
     string s;
-    char   ch;
-    while ((ch = getc(stdin)) != -1) {
-      if (ch != '\n') {
-        s += ch;
-      } else {
-        cout << "# " << s << endl;
-        vector<pair<string, ullong> > v;
-        t.predictive_search(s.c_str(), v);
-        vector<pair<string, ullong> >::const_iterator i = v.begin();
-        vector<pair<string, ullong> >::const_iterator e = v.end();
-        while (i != e) {
-          cout << i->first << endl;
-          i++;
-        }
-        s = "";
+    while (getline(cin, s)) {
+      cout << "# " << s << endl;
+      vector<pair<string, ullong> > v;
+      t.predictive_search(s.c_str(), v);
+      vector<pair<string, ullong> >::const_iterator i = v.begin();
+      vector<pair<string, ullong> >::const_iterator e = v.end();
+      while (i != e) {
+        cout << i->first << endl;
+        i++;
       }
     }
   } catch (const char *err) {

@@ -20,9 +20,10 @@ namespace erika {
   };
 
   class trie {
-    vcode           vc_;
-    bv              tail_;
-    std::vector<uc> ls_;
+    vcode                    vc_;
+    bv                       is_tail_;
+    std::vector<uc>          ls_;
+    std::vector<std::string> tail_;
 
     trie(const trie &);
     trie &operator=(const trie &);
@@ -32,6 +33,19 @@ namespace erika {
                  bool is_cps, ullong depth, ullong max);
     void dsearch(ullong pos, const std::string &str,
                  std::vector<std::pair<std::string, ullong> > &values);
+    int cmp_substr(const char *s1, const char *s2) const {
+      //  0: s1 == s2
+      //  1: s1 is substring of s2
+      // -1: else
+      while (1) {
+        if (*s1 == '\0') {
+          return ((*s2 == '\0') ? 0 : 1);
+        }
+        if (*s1 != *s2) { return -1; }
+        s1++;
+        s2++;
+      }
+    }
 
   public:
     trie();
@@ -51,16 +65,20 @@ namespace erika {
     void   write(const char *filename, bool is_append = false) const;
 
     ullong size() const { return this->ls_.size(); }
-    void push(uc label, ullong degree, bool is_tail) {
+    void push(uc label, ullong degree, bool is_tail, const char *tail) {
       this->vc_.push(degree);
       this->ls_.push_back(label);
-      this->tail_.set(this->size() - 1, is_tail);
+      this->is_tail_.set(this->size() - 1, is_tail);
+      if (is_tail) { this->tail_.push_back(tail); }
     }
     ullong child(ullong pos)   const { return this->vc_.select(pos); }
     ullong parent(ullong pos)  const { return ullong(this->vc_.rank(pos + 1) - 1); }
     ullong degree(ullong pos)  const { return this->vc_.diff(pos + 1); }
     uc     label(ullong pos)   const { return this->ls_[pos]; }
-    bool   is_tail(ullong pos) const { return this->tail_.get(pos); }
+    bool   is_tail(ullong pos) const { return this->is_tail_.get(pos); }
+    const std::string &tail(ullong pos) const {
+      return this->tail_[this->is_tail_.rank(pos) - 1]; 
+    }
   };
 }
 

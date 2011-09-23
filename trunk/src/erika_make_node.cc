@@ -15,15 +15,7 @@ struct range {
 
 void read_words(vector<string> &dic) {
   string s;
-  char   ch;
-  while ((ch = getc(stdin)) != -1) {
-    if (ch != '\n') {
-      s += ch;
-    } else {
-      dic.push_back(s);
-      s = "";
-    }
-  }
+  while (getline(cin, s)) { dic.push_back(s); }
 }
 
 void write_nodes(vector<string> &dic) {
@@ -32,16 +24,23 @@ void write_nodes(vector<string> &dic) {
   while (q.size() > 0) {
     range r = q.front();
     q.pop();
-    bool   is_tail = false;
-    ullong pre_b   = r.b;
-    if (dic[pre_b].length() == r.d) {
-      is_tail = true;
-      pre_b++;
-    }
-    ullong degree = 0;
-    if (pre_b < r.e){
-      uc pre_l = dic[pre_b][r.d];
-      for (ullong i = pre_b; i < r.e; i++) {
+    if ((r.e - r.b) == 1) {
+      cout << int(uc(dic[r.b][r.d - 1])) << "\t0\t1\t";
+      while (r.d < dic[r.b].length()) {
+        cout << int(uc(dic[r.b][r.d])) << "\t";
+        r.d++;
+      }
+      cout << "0" << endl;
+    } else {
+      bool is_tail = false;
+      if (dic[r.b].length() == r.d) {
+        is_tail = true;
+        r.b++;
+      }
+      ullong degree = 0;
+      uc     pre_l  = dic[r.b][r.d];
+      ullong pre_b  = r.b;
+      for (ullong i = r.b; i < r.e; i++) {
         if (uc(dic[i][r.d]) != pre_l) {
           q.push(range(pre_b, i, r.d + 1));
           degree++;
@@ -51,10 +50,11 @@ void write_nodes(vector<string> &dic) {
       }
       q.push(range(pre_b, r.e, r.d + 1));
       degree++;
+      uc label = (r.d > 0) ? dic[r.b][r.d - 1] : 0;
+      cout << int(label) << "\t" << degree;
+      if (is_tail) { cout << "\t1\t0" << endl; }
+      else         { cout << "\t0" << endl; }
     }
-    uc label = (r.d > 0) ? dic[r.b][r.d - 1] : 0;
-    cout << int(label) << "\t" << degree
-         << "\t" << (is_tail ? 1 : 0) << endl;
   }
 }
 
