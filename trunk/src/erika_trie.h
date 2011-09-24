@@ -23,11 +23,13 @@ namespace erika {
     vcode                    vc_;
     bv                       is_tail_;
     std::vector<uc>          ls_;
+    vcode                    tail_pos_;
     std::vector<std::string> tail_;
+    trie                     *ptail_trie_;
+    std::string              revstring_;
 
     trie(const trie &);
     trie &operator=(const trie &);
-    void initialize();
     ullong bsearch(uc label, ullong l, ullong r) const;
     void csearch(const char *key, std::vector<value> &values,
                  bool is_cps, ullong depth, ullong max);
@@ -46,11 +48,21 @@ namespace erika {
         s2++;
       }
     }
+    const std::string &revstring(ullong pos) {
+      this->revstring_ = this->tail(pos);
+      reverse(this->revstring_);
+      while (pos != 0) {
+        this->revstring_ += this->label(pos);
+        pos = this->parent(pos);
+      }
+      return this->revstring_;
+    }
 
   public:
     trie();
     trie(std::ifstream &ifs);
     trie(const char *filename);
+    trie(trie *ptail_trie);
     ~trie();
 
     ullong lookup(const char *key);
@@ -71,13 +83,25 @@ namespace erika {
       this->is_tail_.set(this->size() - 1, is_tail);
       if (is_tail) { this->tail_.push_back(tail); }
     }
+    void push(uc label, ullong degree, bool is_tail, ullong tail_pos) {
+      this->vc_.push(degree);
+      this->ls_.push_back(label);
+      this->is_tail_.set(this->size() - 1, is_tail);
+      if (is_tail) { this->tail_pos_.push(tail_pos); }
+    }
     ullong child(ullong pos)   const { return this->vc_.select(pos); }
     ullong parent(ullong pos)  const { return ullong(this->vc_.rank(pos + 1) - 1); }
     ullong degree(ullong pos)  const { return this->vc_.diff(pos + 1); }
     uc     label(ullong pos)   const { return this->ls_[pos]; }
     bool   is_tail(ullong pos) const { return this->is_tail_.get(pos); }
     const std::string &tail(ullong pos) const {
-      return this->tail_[this->is_tail_.rank(pos) - 1]; 
+      if (this->ptail_trie_) {
+        ullong tpos = this->tail_pos_.diff(
+                      this->is_tail_.rank(pos) - 1);
+        return this->ptail_trie_->revstring(tpos);
+      } else {
+        return this->tail_[this->is_tail_.rank(pos) - 1];
+      }
     }
   };
 }
