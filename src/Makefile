@@ -6,11 +6,16 @@ SRC = erika_bv.cc erika_vcode.cc erika_trie.cc
 HDR = erika_defs.h erika_bv.h erika_vcode.h erika_trie.h
 UNAME = $(shell uname)
 
-erika: liberika $(SRC) erika_make_node.cc erika_make_trie.cc \
-                       erika_extract.cc erika_predictive_search.cc \
-                       erika_common_prefix_search.cc
+erika: liberika tools
+
+tools: liberika $(SRC) \
+       erika_make_node.cc erika_make_trie.cc \
+       erika_make_tail.cc \
+       erika_extract.cc erika_predictive_search.cc \
+       erika_common_prefix_search.cc
 	$(CC) -O2 -Wall -g erika_make_node.cc -o erika_make_node
 	$(CC) -O2 -Wall -g erika_make_trie.cc $(SRC) -o erika_make_trie
+	$(CC) -O2 -Wall -g erika_make_tail.cc $(SRC) -o erika_make_tail
 	$(CC) -O2 -Wall -g erika_extract.cc $(SRC) -o erika_extract
 	$(CC) -O2 -Wall -g erika_predictive_search.cc $(SRC) \
                     -o erika_predictive_search
@@ -38,6 +43,7 @@ endif
 clean:
 	- rm -f erika_make_node
 	- rm -f erika_make_trie
+	- rm -f erika_make_tail
 	- rm -f erika_extract
 	- rm -f erika_predictive_search
 	- rm -f erika_common_prefix_search
@@ -65,7 +71,8 @@ endif
 	cp erika_*.h                  $(INC)
 	cp erika_make_node            $(BIN)
 	cp erika_make_trie            $(BIN)
-	cp erika_make.sh              $(BIN)
+	cp erika_make_tail            $(BIN)
+	cp erika_*.sh                 $(BIN)
 	cp erika_extract              $(BIN)
 	cp erika_predictive_search    $(BIN)
 	cp erika_common_prefix_search $(BIN)
@@ -80,7 +87,8 @@ uninstall:
 	- rm -f $(INC)erika_*.h
 	- rm -f $(BIN)erika_make_node
 	- rm -f $(BIN)erika_make_trie
-	- rm -f $(BIN)erika_make.sh
+	- rm -f $(BIN)erika_make_tail
+	- rm -f $(BIN)erika_*.sh
 	- rm -f $(BIN)erika_extract
 	- rm -f $(BIN)erika_predictive_search
 	- rm -f $(BIN)erika_common_prefix_search
