@@ -21,7 +21,7 @@ namespace erika {
   };
 
 
-  typedef std::pair<tiny_bv, int> tbv_pair;
+  typedef std::pair<tiny_bv, ullong> tbv_pair;
 
   class bv {
     std::vector<tbv_pair> tbv_;

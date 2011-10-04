@@ -3,23 +3,27 @@
 namespace erika {
   using namespace std;
 
-  trie::trie() {
+  trie::trie()
+   : tail_pos_(true) {
     this->vc_.push(1);
     this->ptail_trie_ = NULL;
   }
-  trie::trie(ifstream &ifs) {
+  trie::trie(ifstream &ifs)
+   : tail_pos_(true) {
     this->ptail_trie_ = NULL;
     if (!(this->read(ifs))) {
       throw "erika::trie::trie(): read() returns false.";
     }
   }
-  trie::trie(const char *filename) {
+  trie::trie(const char *filename)
+   : tail_pos_(true) {
     this->ptail_trie_ = NULL;
     if (!(this->read(filename))) {
       throw "erika::trie::trie(): read() returns false.";
     }
   }
-  trie::trie(trie *ptail_trie) {
+  trie::trie(trie *ptail_trie)
+   : tail_pos_(true) {
     this->vc_.push(1);
     this->ptail_trie_ = ptail_trie;
   }

@@ -91,6 +91,7 @@ namespace erika {
       if      (i < sum) { r = p; }
       else if (i > sum) { l = p + 1; }
       else {
+        p++;
         while (this->get(p) == (b == false)) { p++; }
         return p;
       }
