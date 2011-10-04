@@ -11,13 +11,14 @@ namespace erika {
     std::vector<ullong> V_;
     ullong              size_;
     ullong              block_size_;
+    bool                is_diff_only_;
 
     vcode(const vcode &);
     vcode &operator=(const vcode &);
     void initialize();
 
   public:
-    vcode();
+    vcode(bool is_diff_only = false);
     vcode(std::ifstream &ifs);
     vcode(const char *filename);
     ~vcode();

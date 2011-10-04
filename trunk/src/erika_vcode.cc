@@ -10,7 +10,8 @@ namespace erika {
     this->block_size_ = sizeof(ullong) * 8;
   }
 
-  vcode::vcode() {
+  vcode::vcode(bool is_diff_only) 
+   : is_diff_only_(is_diff_only) {
     this->initialize();
   }
   vcode::vcode(ifstream &ifs) {
@@ -37,7 +38,9 @@ namespace erika {
     ullong q = this->size_ % this->block_size_;
     if (q == 0) {
       this->cMSB_.push_back(*(this->cMSB_.rbegin()));
-      this->base_.push_back(*(this->base_.rbegin()));
+      if (!(this->is_diff_only_)) {
+        this->base_.push_back(*(this->base_.rbegin()));
+      }
     }
 
     // get MSB
@@ -56,7 +59,9 @@ namespace erika {
       (*(this->cMSB_.rbegin()))++;
       this->V_.push_back(0);
     }
-    (*(this->base_.rbegin())) += d;
+    if (!(this->is_diff_only_)) {
+      (*(this->base_.rbegin())) += d;
+    }
 
     // update V
     for (uint i = 0; i < SB; i++) {
@@ -128,6 +133,7 @@ namespace erika {
     ullong buf_ull;
     uint   buf_ui;
 
+    ifs.read((char *)&(this->is_diff_only_), sizeof(bool));
     ifs.read((char *)&(this->size_), sizeof(ullong));
     if (ifs.eof()) { return false; }
     ullong block_num = ((this->size_ + this->block_size_ - 1) / this->block_size_)
@@ -142,11 +148,13 @@ namespace erika {
     }
 
     this->base_.clear();
-    while(1) {
-      if (this->base_.size() >= block_num) { break; }
-      ifs.read((char *)&buf_ull, sizeof(ullong));
-      if (ifs.eof()) { return false; }
-      this->base_.push_back(buf_ull);
+    if (!(this->is_diff_only_)) {
+      while(1) {
+        if (this->base_.size() >= block_num) { break; }
+        ifs.read((char *)&buf_ull, sizeof(ullong));
+        if (ifs.eof()) { return false; }
+        this->base_.push_back(buf_ull);
+      }
     }
 
     this->V_.clear();
@@ -168,12 +176,15 @@ namespace erika {
   }
 
   void vcode::write(ofstream &ofs) const {
+    ofs.write((char *)&(this->is_diff_only_), sizeof(bool));
     ofs.write((char *)&(this->size_), sizeof(ullong));
     for (ullong i = 0; i < this->cMSB_.size(); i++) {
       ofs.write((char *)&(this->cMSB_[i]), sizeof(uint));
     }
-    for (ullong i = 0; i < this->base_.size(); i++) {
-      ofs.write((char *)&(this->base_[i]), sizeof(ullong));
+    if (!(this->is_diff_only_)) {
+      for (ullong i = 0; i < this->base_.size(); i++) {
+        ofs.write((char *)&(this->base_[i]), sizeof(ullong));
+      }
     }
     for (ullong i = 0; i < this->V_.size(); i++) {
       ofs.write((char *)&(this->V_[i]), sizeof(ullong));
