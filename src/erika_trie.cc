@@ -4,31 +4,42 @@ namespace erika {
   using namespace std;
 
   trie::trie()
-   : tail_pos_(true) {
+   : tail_pos_(true), value_pos_(true) {
     this->vc_.push(1);
-    this->ptail_trie_ = NULL;
+    this->ptail_trie_  = NULL;
+    this->pvalue_trie_ = NULL;
   }
   trie::trie(ifstream &ifs)
-   : tail_pos_(true) {
-    this->ptail_trie_ = NULL;
+   : tail_pos_(true), value_pos_(true) {
+    this->ptail_trie_  = NULL;
+    this->pvalue_trie_ = NULL;
     if (!(this->read(ifs))) {
       throw "erika::trie::trie(): read() returns false.";
     }
   }
   trie::trie(const char *filename)
-   : tail_pos_(true) {
-    this->ptail_trie_ = NULL;
+   : tail_pos_(true), value_pos_(true) {
+    this->ptail_trie_  = NULL;
+    this->pvalue_trie_ = NULL;
     if (!(this->read(filename))) {
       throw "erika::trie::trie(): read() returns false.";
     }
   }
   trie::trie(trie *ptail_trie)
-   : tail_pos_(true) {
+   : tail_pos_(true), value_pos_(true) {
     this->vc_.push(1);
-    this->ptail_trie_ = ptail_trie;
+    this->ptail_trie_  = ptail_trie;
+    this->pvalue_trie_ = NULL;
+  }
+  trie::trie(trie *ptail_trie, trie *pvalue_trie)
+   : tail_pos_(true), value_pos_(true) {
+    this->vc_.push(1);
+    this->ptail_trie_  = ptail_trie;
+    this->pvalue_trie_ = pvalue_trie;
   }
   trie::~trie() {
-    if (this->ptail_trie_) { delete this->ptail_trie_; }
+    if (this->ptail_trie_)  { delete this->ptail_trie_; }
+    if (this->pvalue_trie_) { delete this->pvalue_trie_; }
   }
 
   ullong trie::bsearch(uc label, ullong l, ullong r) const {
@@ -41,7 +52,7 @@ namespace erika {
     }
     return this->size();
   }
-  void trie::csearch(const char *key, vector<value> &values,
+  void trie::csearch(const char *key, vector<result> &results,
                      bool is_cps, ullong depth, ullong max) {
     ullong depth_begin = depth;
     ullong pos   = 0;
@@ -56,37 +67,38 @@ namespace erika {
         const string &tail = this->tail(pos);
         int r = cmp_substr(tail.c_str(), key + depth);
         if (r == 0 || (r == 1 && is_cps)) {
-          values.push_back(value(depth_begin,
-                                 depth + tail.length(), pos));
-          if (values.size() == max) { return; }
+          results.push_back(result(depth_begin,
+                                   depth + tail.length(), pos));
+          if (results.size() == max) { return; }
         }
       }
     }
   }
   void trie::dsearch(ullong pos, const string &str,
-                     vector<pair<string, ullong> > &values) {
+                     vector<pair<string, ullong> > &results) {
     if (this->is_tail(pos)) {
       const string &tail = this->tail(pos);
-      values.push_back(pair<string, ullong>(str + tail, pos));
+      results.push_back(pair<string, ullong>(str + tail, pos));
     }
     ullong begin = this->child(pos);
     ullong end   = begin + this->degree(pos);
     while (begin < end) {
-      this->dsearch(begin, str + char(this->label(begin)), values);
+      this->dsearch(begin, str + char(this->label(begin)), results);
       begin++;
     }
   }
   ullong trie::lookup(const char *key) {
-    vector<value> values;
-    this->csearch(key, values, false, 0, 0);
-    if (values.size() == 0) { return 0; }
-    return values[0].pos();
+    vector<result> results;
+    this->csearch(key, results, false, 0, 0);
+    if (results.size() == 0) { return 0; }
+    return results[0].pos();
   }
-  void trie::common_prefix_search(const char *key, vector<value> &values) {
-    this->csearch(key, values, true, 0, 0);
+  void trie::common_prefix_search(const char *key,
+                                  vector<result> &results) {
+    this->csearch(key, results, true, 0, 0);
   }
   void trie::predictive_search(const char *key,
-                               vector<pair<string, ullong> > &values) {
+                               vector<pair<string, ullong> > &results) {
     ullong depth = 0;
     ullong pos   = 0;
     while (key[depth] != '\0') {
@@ -102,33 +114,42 @@ namespace erika {
         if (r == 0 || r == 1) { break; }
       }
     }
-    this->dsearch(pos, string(key, 0, depth), values);
+    this->dsearch(pos, string(key, 0, depth), results);
   }
-  void trie::extract(const char *key, vector<value> &values) {
+  void trie::extract(const char *key, vector<result> &results) {
     ullong depth = 0;
     while (key[depth] != '\0') {
-      this->csearch(key, values, true, depth, 0);
+      this->csearch(key, results, true, depth, 0);
       depth++;
     }
   }
   bool trie::check(const char *key) {
-    vector<value> values;
+    vector<result> results;
     ullong depth = 0;
     while (key[depth] != '\0') {
-      this->csearch(key, values, true, depth, 1);
-      if (values.size() > 0) { return true; }
+      this->csearch(key, results, true, depth, 1);
+      if (results.size() > 0) { return true; }
       depth++;
     }
     return false;
   }
 
   bool trie::read(ifstream &ifs) {
-    if (!(this->vc_.read(ifs)))       { return false; }
-    if (!(this->tail_pos_.read(ifs))) { return false; }
-    if (!(this->is_tail_.read(ifs)))  { return false; }
+    if (!(this->vc_.read(ifs)))        { return false; }
+    if (!(this->value_pos_.read(ifs))) { return false; }
+    if (!(this->tail_pos_.read(ifs)))  { return false; }
+    if (!(this->is_tail_.read(ifs)))   { return false; }
     this->is_tail_.build();
 
     uc flg = 0;
+    ifs.read((char *)&flg, sizeof(uc));
+    if (flg > 0) {
+      if (this->pvalue_trie_) { delete this->pvalue_trie_; }
+      this->pvalue_trie_ = new trie;
+      if (!(this->pvalue_trie_->read(ifs))) { return false; }
+    }
+
+    flg = 0;
     ifs.read((char *)&flg, sizeof(uc));
     if (flg > 0) {
       if (this->ptail_trie_) { delete this->ptail_trie_; }
@@ -172,10 +193,18 @@ namespace erika {
 
   void trie::write(ofstream &ofs) const {
     this->vc_.write(ofs);
+    this->value_pos_.write(ofs);
     this->tail_pos_.write(ofs);
     this->is_tail_.write(ofs);
 
     uc flg = 0;
+    if (this->pvalue_trie_) { flg = 1; }
+    ofs.write((char *)&flg, sizeof(uc));
+    if (flg > 0) {
+      this->pvalue_trie_->write(ofs);
+    }
+
+    flg = 0;
     if (this->ptail_trie_) { flg = 1; }
     ofs.write((char *)&flg, sizeof(uc));
     if (flg > 0) {

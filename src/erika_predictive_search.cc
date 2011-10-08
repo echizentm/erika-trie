@@ -15,12 +15,14 @@ int main(int argc, char **argv) {
     string s;
     while (getline(cin, s)) {
       cout << "# " << s << endl;
-      vector<pair<string, ullong> > v;
-      t.predictive_search(s.c_str(), v);
-      vector<pair<string, ullong> >::const_iterator i = v.begin();
-      vector<pair<string, ullong> >::const_iterator e = v.end();
+      vector<pair<string, ullong> > r;
+      t.predictive_search(s.c_str(), r);
+      vector<pair<string, ullong> >::const_iterator i = r.begin();
+      vector<pair<string, ullong> >::const_iterator e = r.end();
       while (i != e) {
-        cout << i->first << endl;
+        cout << i->first;
+        if (t.is_value()) { cout << "\t" << t.value(i->second); }
+        cout << endl;
         i++;
       }
     }

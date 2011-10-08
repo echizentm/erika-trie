@@ -5,17 +5,24 @@ using namespace erika;
 
 int main(int argc, char **argv) {
   if (argc < 2) {
-    cerr << "USAGE: erika_make_trie <trie_name> [tail_name] < infile"
+    cerr << "USAGE: erika_make_trie <trie_name> [tail_name] [value_name] < infile"
          << endl;
     return 0;
   }
-  bool is_tail_trie = false;
-  if (argc >= 3) { is_tail_trie = true; }
+  bool is_tail_trie  = false;
+  bool is_value_trie = false;
+  if (argc >= 3) { is_tail_trie  = true; }
+  if (argc >= 4) { is_value_trie = true; }
 
   try {
     trie *pt;
     trie *ptail_trie;
-    if (is_tail_trie) {
+    trie *pvalue_trie;
+    if (is_value_trie) {
+      ptail_trie  = new trie(argv[2]);
+      pvalue_trie = new trie(argv[3]);
+      pt         = new trie(ptail_trie, pvalue_trie);
+    } else if (is_tail_trie) {
       ptail_trie = new trie(argv[2]);
       pt         = new trie(ptail_trie);
     } else {
@@ -28,7 +35,9 @@ int main(int argc, char **argv) {
     int    is_value;
     while (cin >> label) {
       if (cin >> degree && cin >> is_tail) {
-        string tail = "";
+        is_value = 0;
+        string tail  = "";
+        string value = "";
         if (is_tail) {
           int tail_label;
           while (1) {
@@ -38,7 +47,6 @@ int main(int argc, char **argv) {
           }
 
           cin >> is_value;
-          string value = "";
           if (is_value) {
             int value_label;
             while (1) {
@@ -48,7 +56,16 @@ int main(int argc, char **argv) {
             }
           }
         }
-        if (is_tail_trie) {
+        if (is_value_trie) {
+          reverse(tail);
+          ullong pos = 0;
+          if (is_tail) { pos = ptail_trie->lookup(tail.c_str()); }
+          reverse(value);
+          ullong vpos = 0;
+          if (is_value) { vpos = pvalue_trie->lookup(value.c_str()); }
+          pt->push(uc(label), degree, (is_tail == 1), pos,
+                   (is_value == 1), vpos);
+        } else if (is_tail_trie) {
           reverse(tail);
           ullong pos = 0;
           if (is_tail) { pos = ptail_trie->lookup(tail.c_str()); }
