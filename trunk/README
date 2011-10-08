@@ -28,6 +28,21 @@ all
 
 $$ erika_make.sh keys.txt keys.trie
 
+# make trie (tail-trie mode)
+#   this is alternation of erika_make.sh
+#   smaller, but need more time for search
+$$ erika_make_tt.sh keys.txt keys.trie
+
+# make trie (value-trie mode)
+#   this is alternation of erika_make.sh
+#   if you need keys with values, use this mode
+$$ cat keys.txt  # words is asuumed as ascii or utf8
+apple	5
+add	10
+
+$$ erika_make_vt.sh keys.txt keys.trie
+
+
 
 # extract words from text
 $$ cat sample.txt
@@ -39,7 +54,7 @@ all	6	9
 apple	18	23
 
 
-# predict words from text
+# predict words from text (predictive_search)
 $$ cat sample2.txt
 a
 app
@@ -51,5 +66,19 @@ all
 apple
 # app
 apple
+
+
+# commom_prefix_search
+$$ cat sample3.txt
+applepie
+added
+ 
+$$ erika_common_prefix_search keys.trie < sample3.txt
+# applepie
+apple
+# added
+add
+added
+
 
 
