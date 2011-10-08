@@ -12,23 +12,23 @@ int main(int argc, char **argv) {
     while (cin >> label) {
       if (cin >> degree && cin >> is_tail) {
         if (is_tail) {
-          string tail = "";
           int tail_label;
           while (1) {
             cin >> tail_label;
             if (tail_label == 0) { break; }
-            tail += uc(tail_label);
           }
-          reverse(tail);
-          cout << tail << endl;
 
           cin >> is_value;
           if (is_value) {
+            string value = "";
             int value_label;
             while (1) {
               cin >> value_label;
               if (value_label == 0) { break; }
+              value += uc(value_label);
             }
+            reverse(value);
+            cout << value << endl;
           }
         }
       }

@@ -25,6 +25,7 @@ int main(int argc, char **argv) {
     int    label;
     ullong degree;
     int    is_tail;
+    int    is_value;
     while (cin >> label) {
       if (cin >> degree && cin >> is_tail) {
         string tail = "";
@@ -34,6 +35,17 @@ int main(int argc, char **argv) {
             cin >> tail_label;
             if (tail_label == 0) { break; }
             tail += uc(tail_label);
+          }
+
+          cin >> is_value;
+          string value = "";
+          if (is_value) {
+            int value_label;
+            while (1) {
+              cin >> value_label;
+              if (value_label == 0) { break; }
+              value += uc(value_label);
+            }
           }
         }
         if (is_tail_trie) {
