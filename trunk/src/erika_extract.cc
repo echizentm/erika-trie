@@ -15,13 +15,15 @@ int main(int argc, char **argv) {
     string s;
     while (getline(cin, s)) {
       cout << "# " << s << endl;
-      vector<value> v;
-      t.extract(s.c_str(), v);
-      vector<value>::const_iterator i = v.begin();
-      vector<value>::const_iterator e = v.end();
+      vector<result> r;
+      t.extract(s.c_str(), r);
+      vector<result>::const_iterator i = r.begin();
+      vector<result>::const_iterator e = r.end();
       while (i != e) {
         cout << s.substr(i->begin(), i->end() - i->begin())
-             << "\t" << i->begin() << "\t" << i->end() << endl;
+             << "\t" << i->begin() << "\t" << i->end();
+        if (t.is_value()) { cout << "\t" << t.value(i->pos()); }
+        cout << endl;
         i++;
       }
     }
