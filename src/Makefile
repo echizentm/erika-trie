@@ -10,12 +10,13 @@ erika: liberika tools
 
 tools: liberika $(SRC) \
        erika_make_node.cc erika_make_trie.cc \
-       erika_make_tail.cc \
+       erika_make_tail.cc erika_make_value.cc \
        erika_extract.cc erika_predictive_search.cc \
        erika_common_prefix_search.cc
 	$(CC) -O2 -Wall -g erika_make_node.cc -o erika_make_node
 	$(CC) -O2 -Wall -g erika_make_trie.cc $(SRC) -o erika_make_trie
 	$(CC) -O2 -Wall -g erika_make_tail.cc $(SRC) -o erika_make_tail
+	$(CC) -O2 -Wall -g erika_make_value.cc $(SRC) -o erika_make_value
 	$(CC) -O2 -Wall -g erika_extract.cc $(SRC) -o erika_extract
 	$(CC) -O2 -Wall -g erika_predictive_search.cc $(SRC) \
                     -o erika_predictive_search
@@ -44,6 +45,7 @@ clean:
 	- rm -f erika_make_node
 	- rm -f erika_make_trie
 	- rm -f erika_make_tail
+	- rm -f erika_make_value
 	- rm -f erika_extract
 	- rm -f erika_predictive_search
 	- rm -f erika_common_prefix_search
@@ -72,6 +74,7 @@ endif
 	cp erika_make_node            $(BIN)
 	cp erika_make_trie            $(BIN)
 	cp erika_make_tail            $(BIN)
+	cp erika_make_value           $(BIN)
 	cp erika_*.sh                 $(BIN)
 	cp erika_extract              $(BIN)
 	cp erika_predictive_search    $(BIN)
@@ -88,6 +91,7 @@ uninstall:
 	- rm -f $(BIN)erika_make_node
 	- rm -f $(BIN)erika_make_trie
 	- rm -f $(BIN)erika_make_tail
+	- rm -f $(BIN)erika_make_value
 	- rm -f $(BIN)erika_*.sh
 	- rm -f $(BIN)erika_extract
 	- rm -f $(BIN)erika_predictive_search
