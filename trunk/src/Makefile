@@ -12,7 +12,8 @@ tools: liberika $(SRC) \
        erika_make_node.cc erika_make_trie.cc \
        erika_make_tail.cc erika_make_value.cc \
        erika_extract.cc erika_predictive_search.cc \
-       erika_common_prefix_search.cc
+       erika_common_prefix_search.cc \
+       erika_extract_plus.cc
 	$(CC) -O2 -Wall -g erika_make_node.cc -o erika_make_node
 	$(CC) -O2 -Wall -g erika_make_trie.cc $(SRC) -o erika_make_trie
 	$(CC) -O2 -Wall -g erika_make_tail.cc $(SRC) -o erika_make_tail
@@ -22,6 +23,7 @@ tools: liberika $(SRC) \
                     -o erika_predictive_search
 	$(CC) -O2 -Wall -g erika_common_prefix_search.cc $(SRC) \
                     -o erika_common_prefix_search
+	$(CC) -O2 -Wall -g erika_extract_plus.cc $(SRC) -o erika_extract_plus
 
 liberika: $(SRC) $(HDR)
 ifeq ($(UNAME), Darwin)
@@ -49,6 +51,7 @@ clean:
 	- rm -f erika_extract
 	- rm -f erika_predictive_search
 	- rm -f erika_common_prefix_search
+	- rm -f erika_extract_plus
 	- rm -f liberika.so.1.0
 	- rm -f liberika.1.0.dylib
 	- rm -Rf *.dSYM
@@ -79,6 +82,7 @@ endif
 	cp erika_extract              $(BIN)
 	cp erika_predictive_search    $(BIN)
 	cp erika_common_prefix_search $(BIN)
+	cp erika_extract_plus         $(BIN)
 
 uninstall:
 	- rm -f $(LIB)liberika.so
@@ -96,4 +100,5 @@ uninstall:
 	- rm -f $(BIN)erika_extract
 	- rm -f $(BIN)erika_predictive_search
 	- rm -f $(BIN)erika_common_prefix_search
+	- rm -f $(BIN)erika_extract_plus
 
