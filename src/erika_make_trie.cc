@@ -15,13 +15,13 @@ int main(int argc, char **argv) {
   if (argc >= 4) { is_value_trie = true; }
 
   try {
-    trie *pt;
-    trie *ptail_trie;
-    trie *pvalue_trie;
+    trie *pt          = NULL;
+    trie *ptail_trie  = NULL;
+    trie *pvalue_trie = NULL;
     if (is_value_trie) {
       ptail_trie  = new trie(argv[2]);
       pvalue_trie = new trie(argv[3]);
-      pt         = new trie(ptail_trie, pvalue_trie);
+      pt          = new trie(ptail_trie, pvalue_trie);
     } else if (is_tail_trie) {
       ptail_trie = new trie(argv[2]);
       pt         = new trie(ptail_trie);
