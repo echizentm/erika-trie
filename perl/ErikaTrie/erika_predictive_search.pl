@@ -7,7 +7,7 @@ my $filename = shift @ARGV;
 my $t = ErikaTrie->new($filename);
 while (my $key = <>) {
   chomp($key);
-  my $value = $t->predicitve($key);
+  my $value = $t->predictive_search($key);
   my $line = "";
   foreach my $elem (@$value) {
     $line .= "$elem->{word}";
