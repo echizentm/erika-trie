@@ -11,7 +11,9 @@ while (my $key = <>) {
   my $value = $t->extract($key);
   my $line = "";
   foreach my $elem (@$value) {
-    $line .= "$elem->{word}:$elem->{begin}:$elem->{end},";
+    $line .= "$elem->{word}";
+    $line .= ":".($t->value($elem->{pos})) if ($t->is_value());
+    $line .= ":$elem->{begin}:$elem->{end},";
   }
   chop($line);
   print "$line\n";

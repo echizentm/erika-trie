@@ -40,6 +40,25 @@ CODE:
 OUTPUT:
   RETVAL
 
+int
+trie::is_value()
+CODE:
+  RETVAL = THIS->is_value();
+OUTPUT:
+  RETVAL
+
+SV *
+trie::value(pos)
+long pos
+CODE:
+  string value = "";
+  if (THIS->is_value()) {
+    value = THIS->value(pos);
+  }
+  RETVAL = newSVpv(value.c_str(), value.length());
+OUTPUT:
+  RETVAL
+
 AV *
 trie::extract(key)
 char *key
@@ -59,6 +78,11 @@ CODE:
     SvREFCNT_inc(sv_word);
     if (!hv_store(hv, "word", 4, sv_word, 0)) {
       SvREFCNT_dec(sv_word);
+    }
+    SV *sv_pos = sv_2mortal(newSVuv(i->pos()));
+    SvREFCNT_inc(sv_pos);
+    if (!hv_store(hv, "pos", 3, sv_pos, 0)) {
+      SvREFCNT_dec(sv_pos);
     }
     SV *sv_begin = sv_2mortal(newSVuv(i->begin()));
     SvREFCNT_inc(sv_begin);
