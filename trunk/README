@@ -19,6 +19,12 @@ $$ cd src/
 $$ make
 $$ sudo make install
 
+# install (perl wrapper)
+$$ cd perl/ErikaTrie/
+$$ perl Makefile.PL
+$$ make
+$$ sudo make install
+
 
 # make trie
 $$ cat keys.txt  # words is asuumed as ascii or utf8
