@@ -153,6 +153,7 @@ CODE:
 
   RETVAL = av;
 OUTPUT:
+  RETVAL
 
 AV *
 trie::predictive_search(key)
@@ -186,3 +187,4 @@ CODE:
 
   RETVAL = av;
 OUTPUT:
+  RETVAL
