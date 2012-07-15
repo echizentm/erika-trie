@@ -1,0 +1,8 @@
+Changes
+ErikaTrie.xs
+Makefile.PL
+MANIFEST
+ppport.h
+README
+t/ErikaTrie.t
+lib/ErikaTrie.pm
