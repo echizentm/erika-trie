@@ -16,6 +16,7 @@ New BSD License
 
 # install
 $$ cd src/
+$$ ./configure
 $$ make
 $$ sudo make install
 
