@@ -1,0 +1,3 @@
+TYPEMAP
+trie * O_OBJECT
+
