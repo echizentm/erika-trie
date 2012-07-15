@@ -2,7 +2,6 @@
 use strict;
 use warnings;
 use ErikaTrie;
-use Data::Dumper;
 
 my $filename = shift @ARGV;
 my $t = ErikaTrie->new($filename);
